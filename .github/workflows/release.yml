@@ -88,7 +88,7 @@ jobs:
             Homebrew (рекомендуется):
 
             ```bash
-            brew install --cask --no-quarantine ${{ github.repository_owner }}/tap/magiccaffeinate
+            brew install --cask ${{ github.repository_owner }}/tap/magiccaffeinate
             ```
 
             Или вручную: скачайте `MagicCaffeinate-${{ steps.version.outputs.version }}.dmg`,
@@ -98,10 +98,18 @@ jobs:
             xattr -dr com.apple.quarantine /Applications/MagicCaffeinate.app
             ```
 
+            Ещё вариант — установка из терминала скриптом:
+
+            ```bash
+            curl -fL -o /tmp/magiccaffeinate-install.sh https://raw.githubusercontent.com/${{ github.repository }}/master/Scripts/install.sh
+            bash /tmp/magiccaffeinate-install.sh
+            ```
+
             SHA-256: `${{ steps.package.outputs.sha256 }}`
 
-            Сборка ad-hoc подписана (без Developer ID и нотаризации Apple), поэтому
-            карантин снимается вручную или флагом `--no-quarantine`.
+            Сборка подписана ad-hoc (без Developer ID и нотаризации Apple), поэтому
+            Gatekeeper не подтверждает издателя: cask и скрипт снимают карантин сами,
+            при ручной установке это делается командой `xattr`.
 
   tap:
     name: Обновить Homebrew-тэп
