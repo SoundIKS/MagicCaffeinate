@@ -9,12 +9,14 @@ cask "magiccaffeinate" do
   desc "Menu bar utility that keeps your Mac awake through /usr/bin/caffeinate"
   homepage "https://github.com/__OWNER__/MagicCaffeinate"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "MagicCaffeinate.app"
 
   # Сборка подписана ad-hoc (без Developer ID): снимаем карантин, иначе Gatekeeper
   # не даёт запустить приложение после скачивания.
+  # Именно legacy `postflight`, а не декларативный `postflight_steps`: в шагах
+  # недоступны Ruby-выражения и `appdir`, а путь к .app разрешается через него.
   postflight do
     system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/MagicCaffeinate.app"]
   end
