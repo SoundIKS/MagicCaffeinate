@@ -17,9 +17,11 @@ permissions:
 jobs:
   package:
     name: Универсальный DMG
-    # macos-14 — Apple Silicon; сборка кросс-компилирует второй срез (x86_64),
-    # поэтому раннер любой архитектуры даёт универсальный бандл.
-    runs-on: macos-14
+    # Сборка кросс-компилирует второй срез (build.sh --universal), поэтому раннер
+    # любой архитектуры даёт универсальный бандл. macos-latest — самый доступный
+    # стандартный образ; arm64-образы (macos-14+) на бесплатных аккаунтах могут
+    # быть недоступны («configuration is not supported»).
+    runs-on: macos-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       sha256: ${{ steps.package.outputs.sha256 }}
