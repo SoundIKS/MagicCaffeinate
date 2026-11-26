@@ -1,0 +1,28 @@
+# Шаблон Homebrew-cask. CI подставляет версию, sha256 и владельца репозитория
+# и кладёт результат в тэп как Casks/magiccaffeinate.rb.
+cask "magiccaffeinate" do
+  version "__VERSION__"
+  sha256 "__SHA256__"
+
+  url "https://github.com/__OWNER__/MagicCaffeinate/releases/download/v#{version}/MagicCaffeinate-#{version}.dmg"
+  name "MagicCaffeinate"
+  desc "Menu bar utility that keeps your Mac awake through /usr/bin/caffeinate"
+  homepage "https://github.com/__OWNER__/MagicCaffeinate"
+
+  depends_on macos: ">= :sonoma"
+
+  app "MagicCaffeinate.app"
+
+  # Сборка подписана ad-hoc (без Developer ID): снимаем карантин, иначе Gatekeeper
+  # не даёт запустить приложение после скачивания.
+  postflight do
+    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/MagicCaffeinate.app"]
+  end
+
+  caveats <<~EOS
+    MagicCaffeinate — утилита в строке меню (иконка чашки).
+    Автозапуск при логине: скопируйте приложение в /Applications и используйте
+    LaunchAgent из репозитория (./build.sh install-agent) или «Системные настройки →
+    Основные → Элементы входа».
+  EOS
+end
